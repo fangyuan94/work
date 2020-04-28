@@ -1,0 +1,101 @@
+###设置基础配置
+spring:
+  #mysql数据库连接池配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/blog_system?useUnicode=true&useSSL=false&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    hikari:
+      ##最小空闲连接数量
+      minimum-idle: 1
+      # 空闲连接存活最大时间，默认600000（10分钟）
+      idle-timeout: 180000
+      # 连接池最大连接数，默认是10
+      maximum-pool-size: 10
+      # 此属性控制从池返回的连接的默认自动提交行为,默认值：true
+      auto-commit: true
+      # 连接池名称
+      pool-name: MyHikariCP
+      # 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
+      max-lifetime: 1800000
+      # 数据库连接超时时间,默认30秒，即30000
+      connection-timeout: 30000
+      ##验证sql
+      connection-test-query: SELECT 1
+      ##确定池中的连接是否处于只读模式
+      read-only: false
+      ##验证超时时间 默认5s
+      validation-timeout: 5000
+  ####redis相关配置
+  redis:
+    client-name: work
+    database: 0
+    host: localhost
+    port: 6379
+    timeout: 5000
+    ##lettuce client连接
+    lettuce:
+      pool:
+        # 连接池最大连接数 默认为8
+        max-active: 8
+        # 在连接池中资源耗尽时引发异常之前，连接分配阻止的最长时间（使用负值表示没有限制）
+        max-wait: -1ms
+        # 连接池中的最小空闲连接 默认为0
+        min-idle: 0
+        # 连接池中的最大空闲连接 默认为8
+        max-idle: 8
+        ##空闲对象逐出线程的运行间隔时间 当为正值时，空闲对象逐出器线程将启动，否则将不执行空闲对象逐出 默认为null及不执行
+        time-between-eviction-runs: 30000ms
+  ##   thymeleaf有关配置
+  thymeleaf:
+    cache: false
+    enabled: true
+    #模板的模式，支持 HTML, XML TEXT JAVASCRIPT
+    mode: HTML5
+    #编码 可不用配置
+    encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+server:
+  port: 8081
+  tomcat:
+    ##tomcat下最大连接数
+    max-connections: 8192
+    max-threads: 200
+    min-spare-threads: 20
+    uri-encoding: UTF-8
+    ##当所有可能的请求处理线程都在使用时，等待传入连接请求最大的队列长度
+    accept-count: 200
+    ##将保留在缓存中并在后续请求中重用的空闲处理器的最大数目。当设置为-1时，缓存将不受限制，理论最大大小等于最大连接数。
+    processor-cache: 200
+
+####mybatis相关配置#####
+mybatis:
+  ##若使用MyBatis xml 配置文件时 check-config-location改为true 并设置config-location值
+  ##是否检测config-location中设置的xml路径
+  check-config-location: false
+  #config-location: /path/mybatis.xml
+  ##设置类别名所在包路径 与MapperScan中设置效果一致
+  type-aliases-package: com.fc.work.bean
+  ##用于筛选类型别名的超级类 若没设置
+  type-aliases-super-type: java.lang.Object
+  ##设置handlers所在的包路径 使用",; \t\n"进行分割
+  executor-type: simple
+  ##若使用xml形式编写sql 设置其所属路径
+  ##configuration设置
+  configuration:
+    ##是否开启二级缓存 true开启使用CachingExecutor执行器 该执行器与依然使用executor-type设置的执行器 false不开启 默认为true
+    cache-enabled: false
+    ##本地缓存scope针对一级缓存设置 有两种session(当SqlSession结束后清除缓存)与STATEMENT(当一次查询后就会清除) 默认为session类型
+    local-cache-scope: statement
+    ##是否开启bean驼峰设置 默认为true
+    map-underscore-to-camel-case: true
+    ##log日志删除实现类
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+##分布式ID生成器 默认使用redis作为
+DUI:
+  enable: true
+  snowFlake:
+    machineId: 1
+    datacenterId: 1
